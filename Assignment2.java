@@ -1,9 +1,7 @@
 package cst338;
 /*
- * Here is the base for our first team assignment in cst 338
- * This is a test to ensure github and sourceTree are synced 
- * test two does this update correctly? 
- * Yes it is pushing correctly
+ * Hello all, this is the file for our first assignment as a team
+ * Feel free to contact me with questions
  */
 public class Assignment2 {
 
