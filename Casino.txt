@@ -35,7 +35,13 @@ public class Casino {
             thePull = pull(); //Get a random pull.
             //Calculate the winnings based on the pull.
             winnings = bet * getPayMultiplier(thePull);
-            TripleString.saveWinnings(winnings); //Save the winnings in the static member of TripleString
+            //Save the winnings in the static member of TripleString
+            //If saveWinnings returns true, then the winnings were saved,
+            //otherwise, the array is full.
+            if(TripleString.saveWinnings(winnings) == false) {
+                System.out.println("The maximum number of pulls has been reached.");
+                break;
+            }
             display(thePull, winnings); //Display whether the user won or lost this round.
         }
         //Print some information for the user once they decide to quit playing.
@@ -138,7 +144,7 @@ public class Casino {
         //BAR BAR BAR gets 50.
         else if(thePull.getString1().equals("BAR") && thePull.getString2().equals("BAR") && thePull.getString3().equals("BAR"))
             multiplier = 50;
-        //7 7 7 gets 100.
+            //7 7 7 gets 100.
         else if(thePull.getString1().equals("7") && thePull.getString2().equals("7") && thePull.getString3().equals("7"))
             multiplier = 100;
         return multiplier;
@@ -185,13 +191,17 @@ class TripleString{
     }
     /*  void saveWinnings(int)
         In: An int containing the amount of money the user won for a single pull.
-        Out: Nothing
+        Out: A boolean value, true if the winnings were saved, false if the array is full.
         Description:  This function saves the winnings gained from the last pull to the static
         array. It also increases the number of pulls stored by 1.
      */
-    public static void saveWinnings(int winnings){
-        TripleString.pullWinnings[TripleString.numPulls] = winnings;
-        TripleString.numPulls++;
+    public static boolean saveWinnings(int winnings){
+        if(TripleString.numPulls != TripleString.MAX_PULLS) {
+            TripleString.pullWinnings[TripleString.numPulls] = winnings;
+            TripleString.numPulls++;
+            return true;
+        }
+        return false;
     }
     /*  boolean setString1(String)
         In: A String object for string1 to be set to.
