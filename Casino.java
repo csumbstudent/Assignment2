@@ -15,7 +15,8 @@
 import java.util.Scanner; //For reading keyboard input.
 import java.lang.Math; //For random.
 
-//The Casino class is the main class for this application.
+//The Casino class is the main class for this application. It contains functions
+//for getting the user's bet information, pull information, etc.
 public class Casino {
     //Program entry point main():
     public static void main(String[] args){
@@ -98,90 +99,172 @@ public class Casino {
         triple.setString3(randString());
         return triple;
     }
+    /*  String randString()
+        In: Nothing
+        Out: A String object containing one of four possible strings.
+        Description: This function generates a random number to produce one of four possible
+        strings based on the probability specified in the instructions for this assignment.
+     */
     private static String randString(){
-        double rand = Math.round(Math.random()*23);
-        if(rand >= 0 && rand < 12)
+        double rand = Math.round(Math.random()*23); //0-23 provides 24 possible values.
+        //24 is evenly divisible by 1/2, 1/4, and 1/8, which are the probabilities specified
+        //in the assignment instructions.
+        if(rand >= 0 && rand < 12) //50% chance for BAR
             return "BAR";
-        else if(rand >= 12 && rand < 18)
+        else if(rand >= 12 && rand < 18) //25% chance for cherries
             return "cherries";
-        else if(rand >= 18 && rand < 21)
+        else if(rand >= 18 && rand < 21) //12.5% chance for space
             return "space";
-        else
+        else //12.5% chance for 7
             return "7";
 
     }
+    /*  int getPayMultiplier(TripleString)
+        In: A TripleString object containing information from the user's pull.
+        Out: An integer representing the multiplier associated with the input pull.
+        Description: This functions calculates the pay multiplier according to the instructions
+        of this assignment.
+     */
     private static int getPayMultiplier(TripleString thePull){
         int multiplier = 0;
-        if(thePull.getString1().equals("cherries")){
+        if(thePull.getString1().equals("cherries")){ //If string1 is cherries, set the multiplier to 5.
             multiplier = 5;
-            if(thePull.getString2().equals("cherries")) {
+            if(thePull.getString2().equals("cherries")) { //If string 2 is cherries, set it to 15.
                 multiplier *= 3;
                 if (thePull.getString3().equals("cherries"))
-                    multiplier *= 2;
+                    multiplier *= 2; //If string 3 is cherries, set it to 30.
             }
         }
+        //BAR BAR BAR gets 50.
         else if(thePull.getString1().equals("BAR") && thePull.getString2().equals("BAR") && thePull.getString3().equals("BAR"))
             multiplier = 50;
+        //7 7 7 gets 100.
         else if(thePull.getString1().equals("7") && thePull.getString2().equals("7") && thePull.getString3().equals("7"))
             multiplier = 100;
         return multiplier;
     }
 }
-
+//TripleString holds three string objects, each representing one of the reels on a slot machine.
+//It also contains static members that track how many times the machine has been pulled, and
+//each of the user's winnings.
 class TripleString{
-    private String string1, string2, string3;
-    public static final short MAX_LEN = 20, MAX_PULLS=40;
-    private static int numPulls = 0;
-    private static int[] pullWinnings = new int[MAX_PULLS];
+    private String string1, string2, string3; //Three reels.
+    public static final short MAX_LEN = 20, MAX_PULLS=40; //Constants
+    private static int numPulls = 0; //The current number of times the user has pulled.
+    private static int[] pullWinnings = new int[MAX_PULLS]; //Each of the winnings associated with each pull.
+    /*  TripleString()
+        In: Nothing
+        Out: Nothing
+        Description: A Constructor which initializes each of the object's
+        strings to an empty string.
+     */
     public TripleString(){
         this.string1 = this.string2 = this.string3 = "";
     }
+    /*  boolean validString(String)
+        In: A String to be tested for validity.
+        Out: True if the string is valid, false if otherwise.
+        Description: This function tests to see if the String input is a valid string by checking
+        The length of the string against the MAX_LEN constant. If the string is too long, this
+        function will return false.
+     */
     private boolean validString(String str){
         if(str != null && str.length() <= MAX_LEN)
             return true;
         else
             return false;
     }
+    /*  String toString()
+        In: Nothing
+        Out: A concatenated string containing each of the object's three strings separated by spaces.
+        Description:  This function returns a concatenated string containing each of the object's three
+        strings separated by spaces.
+     */
     public String toString(){
         return this.string1 + "    " + this.string2 + "    " + this.string3;
     }
+    /*  void saveWinnings(int)
+        In: An int containing the amount of money the user won for a single pull.
+        Out: Nothing
+        Description:  This function saves the winnings gained from the last pull to the static
+        array. It also increases the number of pulls stored by 1.
+     */
     public static void saveWinnings(int winnings){
         TripleString.pullWinnings[TripleString.numPulls] = winnings;
         TripleString.numPulls++;
     }
+    /*  boolean setString1(String)
+        In: A String object for string1 to be set to.
+        Out: A boolean value, true if the string is valid, false if otherwise.
+        Description:  This function checks to see if the input string is valid, and if so
+        sets string1 to the input string. If the input string is not valid, it returns false.
+     */
     public boolean setString1(String str){
         if(!this.validString(str))
             return false;
         this.string1 = str;
         return true;
     }
+    /*  boolean setString2(String)
+        In: A String object for string1 to be set to.
+        Out: A boolean value, true if the string is valid, false if otherwise.
+        Description:  This function checks to see if the input string is valid, and if so
+        sets string2 to the input string. If the input string is not valid, it returns false.
+     */
     public boolean setString2(String str){
         if(!this.validString(str))
             return false;
         this.string2 = str;
         return true;
     }
+    /*  boolean setString3(String)
+        In: A String object for string1 to be set to.
+        Out: A boolean value, true if the string is valid, false if otherwise.
+        Description:  This function checks to see if the input string is valid, and if so
+        sets string3 to the input string. If the input string is not valid, it returns false.
+     */
     public boolean setString3(String str){
         if(!this.validString(str))
             return false;
         this.string3 = str;
         return true;
     }
+    /*  String getString1()
+        In: Nothing
+        Out: The value of the object's string1 member.
+        Description:  A basic accessor function.
+     */
     public String getString1(){
         return this.string1;
     }
+    /*  String getString2()
+        In: Nothing
+        Out: The value of the object's string2 member.
+        Description:  A basic accessor function.
+     */
     public String getString2(){
         return this.string2;
     }
+    /*  String getString3()
+        In: Nothing
+        Out: The value of the object's string3 member.
+        Description:  A basic accessor function.
+     */
     public String getString3(){
         return this.string3;
     }
+    /*  void displayWinnings()
+        In: Nothing
+        Out: Nothing
+        Description:  This function displays the information held in the class' static array.
+        It also calculates the user's total winnings.
+     */
     public void displayWinnings(){
         System.out.println("Your inidividual winnings were:");
         int totalWinnings = 0;
-        for(int i = 0; i < TripleString.numPulls; i++) {
+        for(int i = 0; i < TripleString.numPulls; i++) { //Iterate through each of the array values.
             System.out.print(TripleString.pullWinnings[i] + " ");
-            totalWinnings += TripleString.pullWinnings[i];
+            totalWinnings += TripleString.pullWinnings[i]; //Add the current value to totalWinnings
         }
         System.out.println("\nYour total winnings were: $" + totalWinnings);
     }
